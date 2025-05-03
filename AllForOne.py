@@ -8,19 +8,6 @@ from concurrent.futures import ThreadPoolExecutor, wait
 import glob
 from tabulate import tabulate
 
-
-print("\033[91m\033[93m  ,-.       _,---._ __  / \      _   _ _     ___              ___               ")
-print(r" /  )    .-'       `./ /   \    /_\ | | |   / __\__  _ __    /___\_ __   ___    ")
-print(r"(  (   ,'            `/    /|  //_\\| | |  / _\/ _ \| '__|  //  // '_ \ / _ \   ")
-print(r' \  `-"             \ \   / | /  _  \ | | / / | (_) | |    / \_//| | | |  __/   ')
-print(r"  `.              ,  \ \ /  | \_/ \_/_|_| \/   \___/|_|    \___/ |_| |_|\___|   ")
-print(r"   /`.          ,'-`----Y   |                                             			")
-print(r"  (            ;        |   '                                             				")
-print(r"  |  ,-.    ,-' Git-HUB |  /         Nuclei Template Collector                  ")
-print(r"  |  | (   |      BoX   | /	          - AggressiveUser                      ")
-print(r"  )  |  \  `.___________|/                                   				")
-print("  `--'   `--'                                               					\033[0m")
-
 def git_clone(url, destination):
     env = os.environ.copy()
     env['GIT_TERMINAL_PROMPT'] = '0'
@@ -42,13 +29,13 @@ def clone_repository(repo):
         return repo
     return None
 
-def clone_repositories(file_url):
-    response = requests.get(file_url)
-    if response.status_code == 200:
-        repositories = response.text.strip().split('\n')
-    else:
-        print('Failed to retrieve Repo List from the server.')
+def clone_repositories(file_path):
+    if not os.path.isfile(file_path):
+        print('Local file not found.')
         return
+
+    with open(file_path, 'r') as file:
+        repositories = file.read().strip().split('\n')
 
     total_repos = len(repositories)
 
@@ -141,9 +128,9 @@ def summarize_templates():
     print(table)
 
 
-file_url = 'https://raw.githubusercontent.com/AggressiveUser/AllForOne/main/PleaseUpdateMe.txt'
+file = 'nuclei_repos.txt'
 
-clone_repositories(file_url)
+clone_repositories(file)
 
 template_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Templates')
 
