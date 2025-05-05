@@ -24,6 +24,7 @@ def generate_destination_folder(url):
 
 def clone_repository(repo):
     destination = generate_destination_folder(repo)
+    print (f"Cloning {repo} to {destination}")
     return_code, error_msg = git_clone(repo, os.path.join('TRASH', destination))
     if return_code != 0 or 'Username for' in error_msg:
         return repo
@@ -54,13 +55,14 @@ def clone_repositories(file_path):
                 for future in done:
                     failed_repo = future.result()
                     if failed_repo:
+                        print (f"Download failed for {failed_repo}")
                         failed_repos.append(failed_repo)
-                    progress_bar.update(1)
-                    progress = progress_bar.n / total_repos * 100
-                    progress_bar.set_postfix({'Progress': f'{progress:.2f}%'})
+                    # progress_bar.update(1)
+                    # progress = progress_bar.n / total_repos * 100
+                    # progress_bar.set_postfix({'Progress': f'{progress:.2f}%'})
                 futures = [future for future in futures if not future.done()]
 
-        progress_bar.close() 
+        # progress_bar.close() 
 
     print('Cloning process complete!\n')
 
@@ -104,6 +106,7 @@ def count_yaml_files(folder):
 
 
 def summarize_templates():
+    print ("Processing Templates")
 
     cve_folders = glob.glob(os.path.join(template_folder, 'CVE-*'))
     cve_yaml_count = 0
@@ -135,7 +138,3 @@ clone_repositories(file)
 template_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Templates')
 
 summarize_templates()
-
-#Intro
-print('\033[91m\033[93mPlease show your support by giving star to my GitHub repository "AllForOne".')
-print('GITHUB: https://github.com/AggressiveUser/AllForOne\033[0m')
